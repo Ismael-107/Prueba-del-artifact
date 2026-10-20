@@ -1,0 +1,33 @@
+name: CI - Generar documentación
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  generar-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Ejecutar update_readme.py
+        run: python update_readme.py
+
+      - name: Subir README como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: readme-generado
+          path: README.md
+          if-no-files-found: error
